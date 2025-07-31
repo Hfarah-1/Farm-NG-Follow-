@@ -91,3 +91,5 @@ with dai.Device(pipeline) as device:
         client_socket.close()
         cv2.destroyAllWindows()
         print("[Follower] Shutdown complete.")
+
+        #test github
