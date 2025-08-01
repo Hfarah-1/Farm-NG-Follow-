@@ -18,7 +18,7 @@ Step-by-Step Instructions
 1. Start the Robot-Side TCP Controller on the Farm-NG, open a terminal
 
    SSH into the Farm-NG:
-   ssh farm-ng-user@<farm-ng-ip-address>
+   ssh farm-ng-user-mu-paal@<farm-ng-ip-address>
 
    Navigate to the vehicle twist folder:
    cd ~/Desktop/farm-ng/farm-ng-amiga/py/examples/vehicle_twist/
