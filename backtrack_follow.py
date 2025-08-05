@@ -33,7 +33,7 @@ center_tolerance = frame_width // 10  # acceptable range to go straight
 
 # Thresholds for distance zones (adjust for your space)
 LOWER_HEIGHT = 500   # Below this: move forward
-UPPER_HEIGHT = 900   # Between these: sweet zone (stop)
+UPPER_HEIGHT = 1000   # Between these: sweet zone (stop)
 TOO_CLOSE_WIDTH_RATIO = 0.9   # If person fills 90% of frame
 TOO_CLOSE_HEIGHT_RATIO = 0.9
 
@@ -58,18 +58,21 @@ with dai.Device(pipeline) as device:
             img = pose_detector.findPose(frame)
             lmList, bboxInfo = pose_detector.findPosition(img, bboxWithHands=True)
 
-            # Hand detection and fist check (only if not stopped)
+            # Hand detection and fist check (only if not stopped), now drawing landmarks and bbox
             if not stopped:
-                hands, img = hand_detector.findHands(img, draw=True)  # draw=True shows landmarks and lines
+                hands, img = hand_detector.findHands(img, draw=True)  # draw=True draws landmarks & connections
+                
                 if hands:
+                    for hand in hands:
+                        # Draw bounding box around hand
+                        xH, yH, wH, hH = hand['bbox']
+                        cv2.rectangle(img, (xH, yH), (xH + wH, yH + hH), (255, 255, 0), 2)  # Cyan box
+
                     hand = hands[0]
                     fingers = hand_detector.fingersUp(hand)
                     if sum(fingers) == 0:  # all fingers down = fist detected
                         stopped = True
                         print("[Follower] Fist detected - stopping permanently.")
-            else:
-                # Still draw hands landmarks and lines even if stopped
-                hands, img = hand_detector.findHands(img, draw=True)
 
             if stopped:
                 command = 'x'  # Permanently stop
@@ -113,7 +116,7 @@ with dai.Device(pipeline) as device:
             except Exception as e:
                 print(f"[Follower][TCP ERROR]: {e}")
 
-            # Show frame
+            # Show frame with pose and hand landmarks + bounding boxes
             cv2.imshow("Follower View", img)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 client_socket.sendall('x'.encode())
