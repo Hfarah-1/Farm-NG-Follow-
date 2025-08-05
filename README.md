@@ -1,53 +1,78 @@
-# Farm-NG-Follow-
+# Farm-NG-Follow
 
+## Requirements
 
-Follow System Setup Guide (Farm-NG + DepthAI + Pose/Hand Detection Algorithms)
-This system uses a DepthAI camera and pose/hand detection to control the movement of the Farm-NG Amiga robot via TCP socket communication.
+Make sure you have the following ready:
 
-Prerequisites
+- Farm-NG Amiga robot powered on and connected to the same network as your laptop.  
+- DepthAI camera connected to your laptop via USB.  
+- Python 3 installed with required libraries:  
+  - `opencv-python`  
+  - `depthai`  
+  - `cvzone`  
+  - `mediapipe`  
+  - `torch` and `torchvision` (for `planner_follow.py`)  
+  - `segmentation_models_pytorch` (for `planner_follow.py`)  
 
-Farm-NG Amiga powered on and connected to the same network as your laptop.
-DepthAI camera connected to the laptop via USB.
-controller.py located in the vehicle_twist/ directory on the Farm-NG.
-follow.py on your local laptop.
-Python 3 installed (along with OpenCV, MediaPipe, cvzone, etc).
+---
 
+## Robot Side
 
-Step-by-Step Instructions
+Open a new terminal on your local machine and SSH into the Farm-NG robot using the following command:
 
-1. Start the Robot-Side TCP Controller on the Farm-NG, open a terminal
+```bash
+ssh farm-ng-user-mu-paal@<ip-address>
+```
+Once connected, navigate to the vehicle twist folder:
 
-   SSH into the Farm-NG:
-   ssh farm-ng-user-mu-paal@(farm-ng-ip-address)
+```bash
+cd ~/Desktop/farm-ng/farm-ng-amiga/py/examples/vehicle_twist/
+```
+Inside this folder, you will find the controller.py script.
 
-   Navigate to the vehicle twist folder:
-   cd ~/Desktop/farm-ng/farm-ng-amiga/py/examples/vehicle_twist/
+## About `controller.py`
 
-   Run the controller:
-   python3 controller.py
+The `controller.py` script runs on the Farm-NG robot and acts as a TCP server. It listens for incoming single-character commands (`w`, `a`, `d`, `x`, etc.) sent from the vision follower scripts running on your laptop. These commands correspond to movement instructions like moving forward, turning left or right, and stopping.
 
-This will start a TCP server socket, which listens commands from the vision system which will be converted into Twist2d velocity commands for the robot to act on.
+Upon receiving a command, `controller.py` converts it into velocity commands (`Twist2d` messages) which control the Farm-NG Amiga's motors, enabling the robot to follow or react to the detected person or path based on the vision processing happening remotely.
 
-2. Start the Vision-Side Follower Script
-   on your local laptop, open a separate terminal:
+run it with:
 
-   Plug in the DepthAI camera via USB.
+```bash
+python3 controller.py
+```
 
-   Navigate to the folder containing follow.py:
-   cd path/to/your/follow_script_folder/
+# Overview of Each Vision Follower Script
 
-   Run the script:
-   python3 follow.py
+## 1. planner_follow.py  
+- **Description:** Uses a deep learning segmentation model (UNet ResNet34) to detect the drivable path in camera frames.  
+- **Function:** Processes enhanced images to create a binary path mask, then decides whether the robot should move forward, turn left/right, or stop based on the path’s position in the frame.  
+- **Features:** Includes image contrast enhancement and live overlay of segmentation mask. This is the foundational script for vision-based autonomous navigation.
 
-   This script uses the DepthAI camera to detect a person using pose detection and computes whether the robot should turn left, right, move forward, or stop. It sends the         corresponding command (w, a, d, x) over the TCP socket to the already-listening controller.py on the robot.
+## 2. follow.py  
+- **Description:** Uses DepthAI camera with cvzone PoseDetector to detect a person and track their horizontal position.  
+- **Function:** Commands the robot to move forward, turn left, or turn right based on the bounding box center of the detected person, or stop if no person detected.  
+- **Features:** Simple pose-based follower with bounding box visualization.
 
-Note: Currently, there is no stop function on the follow.py code.
+## 3. height_follow.py  
+- **Description:** Builds on `follow.py` by adding distance awareness using the bounding box height.  
+- **Function:** Stops the robot when the person is too close (bounding box height exceeds threshold), otherwise moves or turns based on horizontal position.  
+- **Features:** Helps avoid collisions using rough distance estimation.
 
+## 4. backtrack_follow.py  
+- **Description:** Adds hand detection to pose detection using cvzone HandDetector.  
+- **Function:** Detects a hand signal (fist) to permanently stop the robot; otherwise, uses pose bounding box for movement commands.  
+- **Features:** Includes bounding box and center dot visualization, with fist stop detection.
 
-There is also a follow_fist.py that has implemented a stop function using hand signals (fist). Although it works it hasnt been thoroughly tested yet. To run the follow_fist.py file you would go through all of the same steps, the only difference would be running it using python3 fist_follow.py.Is is made to work with the controller.py that will be running on the robot side 
+## 6. fist_follow.py  
+- **Description:** Uses DepthAI camera combined with MediaPipe Hands (not cvzone) for simple hand gesture detection.  
+- **Function:** Sends 'w' (move forward) when a fist is detected, otherwise 'x' (stop).  
+- **Features:** Lightweight, hand-only control with basic video display.
 
+---
+## Running the Vision Follower Scripts (on your local laptop)
 
+After you have the robot-side `controller.py` running via SSH, open a terminal on your local machine, navigate to the folder containing your follower scripts, and run any of the vision follower scripts by using:
 
-
-
-
+```bash
+python3 <filename.py>
