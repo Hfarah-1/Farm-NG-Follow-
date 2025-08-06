@@ -91,9 +91,17 @@ Setup includes remote SSH access to the Farm-NG Amiga and live execution of `con
 - **Features:** Lightweight, hand-only control with basic video display.
 
 ---
-## Running the Vision Follower Scripts (on your local laptop)
+## Running the Vision Follower Scripts (locally)
 
-After you have the robot-side `controller.py` running via SSH, open a terminal on your local machine, navigate to the folder containing your follower scripts, and run any of the vision follower scripts by using:
+After you have the robot-side `controller.py` running via SSH, open a seperate terminal on your local machine, navigate to the folder containing your follower scripts, and run any of the vision follower scripts by using:
 
 ```bash
 python3 <filename.py>
+```
+
+
+<img width="1728" height="1117" alt="Screenshot 2025-08-06 at 11 46 49 AM" src="https://github.com/user-attachments/assets/0cbcc762-6dd4-4e72-9351-5fdbf3e02a9f" />
+
+
+
+
