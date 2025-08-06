@@ -82,12 +82,12 @@ Setup includes remote SSH access to the Farm-NG Amiga and live execution of `con
 
 ## 4. backtrack_follow.py  
 - **Description:** Adds hand detection to pose detection using cvzone HandDetector.  
-- **Function:** Detects a hand signal (fist) to permanently stop the robot; otherwise, uses pose bounding box for movement commands.  
+- **Function:** Uses hand signal (fist) for full stop. Follows like normal and moves in reverse when a person is too close.
 - **Features:** Includes bounding box and center dot visualization, with fist stop detection.
 
 ## 6. fist_follow.py  
 - **Description:** Uses DepthAI camera combined with MediaPipe Hands (not cvzone) for simple hand gesture detection.  
-- **Function:** Sends 'w' (move forward) when a fist is detected, otherwise 'x' (stop).  
+- **Function:** Detects a hand signal (fist) to permanently stop the robot; otherwise, uses pose bounding box for movement commands.  
 - **Features:** Lightweight, hand-only control with basic video display.
 
 ---
