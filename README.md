@@ -70,7 +70,7 @@ python3 controller.py --service-config <config file>.json
 - **Function:** Stops the robot when the person is too close (bounding box height exceeds threshold), otherwise moves or turns based on horizontal position.  
 - **Features:** Helps avoid collisions using rough distance estimation.
 
-### 📹 Farm-NG Follow Demo
+### Farm-NG Follow Demo
 
 [![Watch the demo](https://img.youtube.com/vi/mdIx4PoUW4Q/maxresdefault.jpg)](https://www.youtube.com/watch?v=mdIx4PoUW4Q)
 
