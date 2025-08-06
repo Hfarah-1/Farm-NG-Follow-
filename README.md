@@ -44,7 +44,7 @@ python3 controller.py
 
 # Overview of Each Vision Follower Script
 
-## 1. planner_follow.py  
+## 1. planner.py  
 - **Description:** Uses a deep learning segmentation model (UNet ResNet34) to detect the drivable path in camera frames.  
 - **Function:** Processes enhanced images to create a binary path mask, then decides whether the robot should move forward, turn left/right, or stop based on the path’s position in the frame.  
 - **Features:** Includes image contrast enhancement and live overlay of segmentation mask. This is the foundational script for vision-based autonomous navigation.
