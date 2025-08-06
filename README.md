@@ -28,6 +28,12 @@ Once connected, navigate to the vehicle twist folder:
 ```bash
 cd ~/Desktop/farm-ng/farm-ng-amiga/py/examples/vehicle_twist/
 ```
+
+<img width="829" height="141" alt="Screenshot 2025-08-06 at 9 59 51 AM" src="https://github.com/user-attachments/assets/5eb0d372-58e4-4c0f-9de1-c3ebe7362b80" />
+
+
+
+
 Inside this folder, you will find the controller.py script.
 
 ## About `controller.py`
@@ -39,8 +45,13 @@ Upon receiving a command, `controller.py` converts it into velocity commands (`T
 run it with:
 
 ```bash
-python3 controller.py
+python3 controller.py --service-config <config file>.json
 ```
+
+<img width="866" height="106" alt="Screenshot 2025-08-06 at 10 04 24 AM" src="https://github.com/user-attachments/assets/7d6ad281-35cb-4856-a764-f9806746da51" />
+
+
+
 
 # Overview of Each Vision Follower Script
 
@@ -58,6 +69,16 @@ python3 controller.py
 - **Description:** Builds on `follow.py` by adding distance awareness using the bounding box height.  
 - **Function:** Stops the robot when the person is too close (bounding box height exceeds threshold), otherwise moves or turns based on horizontal position.  
 - **Features:** Helps avoid collisions using rough distance estimation.
+
+### 📹 Farm-NG Follow Demo
+
+[![Watch the demo](https://img.youtube.com/vi/mdIx4PoUW4Q/maxresdefault.jpg)](https://www.youtube.com/watch?v=mdIx4PoUW4Q)
+
+This video demonstrates a DepthAI pose-detection-based following system. The robot uses `height_follow.py` to detect a person and follows them using bounding box height as a trigger to stop when close enough.  
+Setup includes remote SSH access to the Farm-NG Amiga and live execution of `controller.py`.
+
+
+
 
 ## 4. backtrack_follow.py  
 - **Description:** Adds hand detection to pose detection using cvzone HandDetector.  
