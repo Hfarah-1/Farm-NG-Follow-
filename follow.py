@@ -1,3 +1,9 @@
+##########################################
+#           HAS NO STOP FUNTIONS         #
+#              FOR TESTING ONLY          #
+##########################################
+
+
 import cv2
 import socket
 import depthai as dai
