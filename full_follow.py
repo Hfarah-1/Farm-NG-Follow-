@@ -1,3 +1,7 @@
+#This version of the follow program uses a fist to stop
+#When a fist is detected it comes to a full stop
+#This is a full stop, and can only be undone by rerunning the program.
+
 import cv2
 import socket
 import depthai as dai

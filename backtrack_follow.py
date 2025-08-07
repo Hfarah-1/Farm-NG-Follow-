@@ -1,3 +1,9 @@
+#Hold fist to pause follow functions
+#Lower fist to resume follow
+#Will move backwards whenever a person is too close
+#If the person’s width is ≥ 90% of the frame width
+#Or if the person’s height is ≥ 90% of the frame height
+
 import cv2
 import socket
 import depthai as dai

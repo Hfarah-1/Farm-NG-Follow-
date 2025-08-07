@@ -10,18 +10,22 @@ def getFrame(queue):
 def getMonoCamera(pipeline, isLeft):
     # Configure mono camera
     mono = pipeline.createMonoCamera()
-    mono.setResolution(dai.MonoCameraProperties.SensorResolution.THE_400_P)
+    
+    # ✅ Use higher resolution for better long-range accuracy
+    mono.setResolution(dai.MonoCameraProperties.SensorResolution.THE_720_P)
     mono.setBoardSocket(dai.CameraBoardSocket.LEFT if isLeft else dai.CameraBoardSocket.RIGHT)
     return mono
 
 def getStereoPair(pipeline, monoLeft, monoRight):
     # Create and configure stereo node
     stereo = pipeline.createStereoDepth()
+    
+    # ✅ Improve long-range quality
     stereo.setLeftRightCheck(True)
     stereo.setSubpixel(True)
-    
-    # ✅ Apply median filtering to smooth disparity output
+    stereo.setExtendedDisparity(False)  # Must be off for long-range
     stereo.initialConfig.setMedianFilter(dai.StereoDepthProperties.MedianFilter.KERNEL_7x7)
+    stereo.initialConfig.setConfidenceThreshold(180)  # Lower threshold = more data at distance
 
     # Link mono outputs to stereo inputs
     monoLeft.out.link(stereo.left)
